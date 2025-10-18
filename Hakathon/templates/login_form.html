@@ -1,18 +1,15 @@
 {% extends "base.html" %}
-
-{% block title %}Login - {{ method|capitalize }}{% endblock %}
-
+{% block title %}Login{% endblock %}
 {% block content %}
-<div class="login-form">
-    <h2>Login with {{ method|capitalize }}</h2>
-    <form method="post">
-        <label for="value">{{ method|capitalize }}:</label>
-        <input type="text" id="value" name="value" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <input type="submit" value="Login" class="btn">
-    </form>
-</div>
+  <h2>Login</h2>
+  <form method="POST" action="{{ url_for('loginmethod', method=method) }}">
+    <label>Value ({{ method }})</label>
+    <input type="text" name="value" placeholder="Enter your {{ method }}" required>
+
+    <label>Password</label>
+    <input type="password" name="password" placeholder="Enter your password" required>
+
+    <button type="submit" class="btn">Login</button>
+    <a href="{{ url_for('entry') }}" class="btn" style="background:#64748b;">Cancel</a>
+  </form>
 {% endblock %}
