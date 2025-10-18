@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Us - ProJob Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            {% if session['userid'] %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        <h2>Contact Us</h2>
+        <p>Get in touch with the ProJob Platform team:</p>
+        <div style="margin: 20px 0;">
+            <p><strong>Email:</strong> support@projob.com</p>
+            <p><strong>Phone:</strong> +95 123 456 789</p>
+            <p><strong>Address:</strong> Yangon, Myanmar</p>
+        </div>
+        <p>We're here to help you connect talent with opportunities!</p>
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('home') }}" class="btn">Back to Home</a>
+        </div>
+    </main>
+    <footer>
+        <small>© 2025 ProJob Platform. All rights reserved.</small>
+    </footer>
+</body>
+</html>
