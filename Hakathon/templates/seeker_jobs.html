@@ -52,10 +52,10 @@
   <div class="jobwrap">
     <div>
       <h3>{{ job.position }}</h3>
-      <b>Company:</b> {{ job.company or job.owner }}<br>
+      <b>Company:</b> {{ job.owner_name or 'Unknown Company' }}<br>
       <b>Location:</b> {{ job.location }}<br>
       <b>Description:</b> {{ job.description }}<br>
-      <b>Skills:</b> {{ job.skills or job.category }}<br>
+      <b>Category:</b> {{ job.category }}<br>
       <form action="{{ url_for('seeker_interest', job_id=job.id) }}" method="post" style="display:inline;">
         <button type="submit">I'm Interested</button>
       </form>

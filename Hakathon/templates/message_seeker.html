@@ -6,19 +6,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h2>Message {{ seeker.fullname }}</h2>
-        <p><strong>Email:</strong> {{ seeker.email }}</p>
-        <p><strong>Profile:</strong> {{ seeker.profile or "No profile data" }}</p>
-        
-        <form action="{{ url_for('send_message_to_seeker', seeker_id=seeker.id) }}" method="post">
-            <div class="form-group">
-                <label for="message">Your Message:</label>
-                <textarea name="message" id="message" class="form-control" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Send Message</button>
-            <a href="{{ url_for('ownerhome') }}" class="btn btn-secondary">Back to Owner Home</a>
+    <main>
+        <h2>Message {{ seeker.full_name or seeker.username }}</h2>
+        <p><strong>Email:</strong> {{ seeker.contact_email or 'N/A' }}</p>
+        <p><strong>Phone:</strong> {{ seeker.contact_phone or 'N/A' }}</p>
+        <p><strong>Skills:</strong> {{ seeker.skills or 'N/A' }}</p>
+        <p><strong>Experience:</strong> {{ seeker.experience or 'N/A' }}</p>
+
+        <form action="{{ url_for('owner_messages', seeker_id=seeker.id) }}" method="post">
+            <label for="message">Your Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+            <a class="btn" href="{{ url_for('ownerhome') }}">Back to Dashboard</a>
         </form>
-    </div>
+    </main>
 </body>
 </html>

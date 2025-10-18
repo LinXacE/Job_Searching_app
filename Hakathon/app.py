@@ -319,6 +319,7 @@ def ownerpostjob():
             location=location,
             category=category,
             jobtype=jobtype,
+            timestamp=datetime.now().isoformat()
         )
         db.session.add(new_job)
         db.session.commit()
@@ -326,35 +327,59 @@ def ownerpostjob():
         return redirect(url_for("ownerhome"))
     return render_template("owner_post_job.html")
 
+# NEW: Add missing shortlist_seeker route
+@app.route("/owner/shortlist_seeker/<int:job_id>/<int:seeker_id>", methods=["POST"])
+def shortlist_seeker(job_id, seeker_id):
+    if not is_logged_in():
+        return redirect(url_for("entry"))
+    
+    owner = db.session.get(User, session["userid"])
+    if owner.role != "businessowner":
+        return redirect(url_for("entry"))
+    
+    # Update the Interest record to mark as shortlisted
+    interest = Interest.query.filter_by(jobpostid=job_id, jobseekerid=seeker_id).first()
+    if interest:
+        interest.approved = True
+        db.session.commit()
+        flash("Applicant shortlisted successfully!")
+    else:
+        flash("Application not found.")
+    
+    return redirect(url_for("ownerhome"))
+
 @app.route("/owner/chatroom/<int:job_id>", methods=["GET", "POST"])
 def owner_chatroom(job_id):
     if not is_logged_in():
         return redirect(url_for("entry"))
     owner = db.session.get(User, session["userid"])
     job = JobPost.query.get_or_404(job_id)
+    
     # Gather all interested/applying seekers for the job
     interests = Interest.query.filter_by(jobpostid=job_id).all()
     applicants = []
     for rec in interests:
         seeker = User.query.get(rec.jobseekerid)
-        applicants.append({
-            "id": seeker.id,
-            "username": seeker.username,
-            "position": job.position,
-            "cv_link": url_for("view_seeker", seeker_id=seeker.id),
-            # For demo, always enabled, or add a real column/logic for chat enable
-            "chat_enabled": True,
-        })
+        if seeker:
+            applicants.append({
+                "id": seeker.id,
+                "username": seeker.username,
+                "position": job.position,
+                "cv_link": url_for("view_seeker", seeker_id=seeker.id),
+                "chat_enabled": True,
+            })
+    
     # Select seeker/applicant for chat if present
     seeker_id = request.args.get("seeker_id")
     selected_seeker = User.query.get(int(seeker_id)) if seeker_id else None
+    
+    # Create consistent room ID format - FIXED
+    room = f"chat_{job_id}_{seeker_id}" if seeker_id else None
 
     # Enable/disable (use POST and hidden input "chat_action")
     if request.method == "POST" and "chat_action" in request.form:
         action = request.form["chat_action"]
-        # Implement approve/disable logic if you add a column to Interest or User
         flash(f"Chat {action} for selected applicant.")
-        # Typically update DB here
 
     # Send chat message (if applicant selected)
     if request.method == "POST" and "text" in request.form and seeker_id:
@@ -363,7 +388,7 @@ def owner_chatroom(job_id):
             seeker_id=selected_seeker.id,
             sender_id=owner.id,
             content=request.form["text"],
-            timestamp="now",  # Use datetime.now() or similar for real time
+            timestamp=datetime.now().isoformat()  # FIXED: proper timestamp
         )
         db.session.add(msg)
         db.session.commit()
@@ -384,7 +409,7 @@ def owner_chatroom(job_id):
         applicants=applicants,
         selected_seeker=selected_seeker,
         messages=messages,
-        room={"jobid": job_id},
+        room=room,  # FIXED: now it's a string, not a dict
         user=owner,
     )
 
@@ -428,6 +453,7 @@ def owner_messages():
                 owner_id=owner.id,
                 seeker_id=seeker_id,
                 sender_id=owner.id,
+                timestamp=datetime.now().isoformat()  # FIXED: proper timestamp
             )
             db.session.add(msg)
             db.session.commit()
@@ -467,14 +493,30 @@ def seekerdashboard():
     return render_template("seeker_dashboard.html", jobs=jobs, user=user)
 
 
+# FIXED: Update seekerjobs to provide owner names
 @app.route("/seeker/jobs")
 def seekerjobs():
     if not is_logged_in():
         return redirect(url_for("entry"))
     user = db.session.get(User, session["userid"])
-    # Filter jobs by user location if wanted, otherwise all jobs:
+    
+    # Get jobs with owner information
     jobs = JobPost.query.filter(JobPost.location.contains(user.location)).all() if user.location else JobPost.query.all()
-    return render_template("seeker_jobs.html", jobs=jobs, user=user)
+    job_data = []
+    for job in jobs:
+        owner = User.query.get(job.ownerid)
+        job_info = {
+            'id': job.id,
+            'position': job.position,
+            'description': job.description,
+            'location': job.location,
+            'category': job.category,
+            'jobtype': job.jobtype,
+            'owner_name': owner.username if owner else 'Unknown Company'
+        }
+        job_data.append(job_info)
+    
+    return render_template("seeker_jobs.html", jobs=job_data, user=user)
 
 @app.route("/seeker/<int:seeker_id>")
 def view_seeker(seeker_id):
@@ -513,7 +555,7 @@ def seeker_interest(job_id):
     if user:
         existing = Interest.query.filter_by(jobseekerid=user.id, jobpostid=job_id).first()
         if not existing:
-            interest = Interest(jobseekerid=user.id, jobpostid=job_id)
+            interest = Interest(jobseekerid=user.id, jobpostid=job_id, timestamp=datetime.now().isoformat())
             db.session.add(interest)
             db.session.commit()
     return redirect(url_for("seekerjobs"))
@@ -584,9 +626,7 @@ def seekerhistory():
 def message_seeker(seeker_id):
     seeker = User.query.get(seeker_id)
     if not seeker:
-        # Optionally, handle missing seeker
         return "Job seeker not found.", 404
-    # Render a template (e.g., message_seeker.html) to show the messaging UI
     return render_template('message_seeker.html', seeker=seeker)
 
 
