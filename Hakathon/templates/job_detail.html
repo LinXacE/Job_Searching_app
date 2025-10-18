@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ job.position }} - Job Details</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background:rgb(5, 5, 73);
+        margin: 0;
+        color:rgb(5, 5, 73) ;
+        padding: 0;
+      }
+      .card {
+        background: #fff;
+        margin: 40px auto;
+        width: 470px;
+        padding: 36px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.13);
+      }
+      h2 {
+        color: #001f3f;
+        margin-bottom: 22px;
+      }
+      .row {
+        margin-bottom: 20px;
+      }
+      label {
+        font-weight: bold;
+        display: inline-block;
+        width: 110px;
+      }
+      .back-link {
+        display: block;
+        margin-bottom: 22px;
+        color: #001f3f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <a class="back-link" href="{{ url_for('owner_job_history') }}"
+        >← Back to Job History</a
+      >
+      <h2>{{ job.position }}</h2>
+      <div class="row">
+        <label>Status:</label> {{ job.status if job.status else 'Active' }}
+      </div>
+      <div class="row"><label>Posted on:</label> {{ job.timestamp }}</div>
+      <div class="row"><label>Location:</label> {{ job.location or '-' }}</div>
+      <div class="row"><label>Category:</label> {{ job.category or '-' }}</div>
+      <div class="row"><label>Type:</label> {{ job.jobtype or '-' }}</div>
+      <div class="row">
+        <label>Description:</label> <br />{{ job.description }}
+      </div>
+      <div class="row">
+        <label>Applicants:</label>
+        <ul>
+          {% for seeker in applicants %}
+          <li>{{ seeker.username }} ({{ seeker.value }})</li>
+          {% else %}
+          <li>No applicants for this job yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

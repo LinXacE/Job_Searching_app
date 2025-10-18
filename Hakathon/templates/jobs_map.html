@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Map</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+      #map { width: 90vw; height: 60vh; }
+    </style>
+</head>
+<body>
+    <h2>Jobs Location Map</h2>
+    <div id="map"></div>
+    <script>
+      // Replace these with your backend job list, and ensure each job has lat/lng!
+      var jobs = [
+        {
+          "position": "Backend Developer",
+          "company": "Tech Inc",
+          "lat": 16.8409,
+          "lng": 96.1735,
+          "description": "Develop backend systems in Python."
+        },
+        {
+          "position": "Designer",
+          "company": "Creative Studio",
+          "lat": 16.8661,
+          "lng": 96.1951,
+          "description": "UI/UX design, Illustrator, Figma."
+        }
+        // ...more jobs
+      ];
+
+      var map = L.map('map').setView([16.8661, 96.1951], 12); // Yangon by default
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+      }).addTo(map);
+
+      // Add markers:
+      jobs.forEach(function(job) {
+        if (job.lat && job.lng) {
+          var marker = L.marker([job.lat, job.lng]).addTo(map);
+          marker.bindPopup(
+            "<strong>" + job.position + "</strong><br>" +
+            job.company + "<br>" +
+            job.description
+          );
+        }
+      });
+    </script>
+</body>
+</html>

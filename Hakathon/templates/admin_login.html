@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <style>
+        body { font-family: Arial; display: flex; align-items: center; justify-content: center; height: 100vh;}
+        .login-wrap { text-align: center; }
+        input, button { font-size: 14px; margin: 10px; padding: 8px 15px; border-radius: 5px;}
+        button { background: #537fe7; color: white; border: none;}
+        button:hover { background: #3354a1; }
+
+:root {
+  --navy: rgb(14, 2, 79);       
+  --navy-light: #0a2e5c; 
+  --white: #ffffff;
+  --radius: 10px;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  --ui: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--ui);
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  backdrop-filter: blur(6px);
+  animation: fadeUp 0.6s ease;
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  background: var(--white);
+  color: var(--navy);
+  font-weight: 700;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  margin: 0 auto 16px;
+}
+
+h2 {
+  margin-bottom: 8px;
+  font-size: 1.6rem;
+  letter-spacing: -0.4px;
+}
+
+p {
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: var(--white);
+  opacity: 0.9;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: var(--white);
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus {
+  border-color: var(--white);
+  background: rgba(255,255,255,0.15);
+}
+
+button {
+  width: 100%;
+  background: var(--white);
+  color: var(--navy);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255,255,255,0.2);
+}
+
+.login-footer {
+  margin-top: 18px;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.login-footer a {
+  color: var(--white);
+  text-decoration: underline;
+  transition: 0.2s;
+}
+
+.login-footer a:hover {
+  opacity: 1;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 28px 20px;
+  }
+  h2 {
+    font-size: 1.3rem;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="login-wrap">
+        <h2>Admin Login</h2>
+        <form method="POST">
+            <input type="text" name="username" placeholder="Admin Username" required><br>
+            <input type="password" name="password" placeholder="Admin Password" required><br>
+            <button type="submit">Login</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div style="color: red;">
+              {% for message in messages %}
+                <div>{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

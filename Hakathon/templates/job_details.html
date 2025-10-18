@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Posted History</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: rgb(5, 5, 73); margin: 0; padding: 0;}
+        .container { margin: 40px auto; max-width: 900px; background: #fff; border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.08); padding: 40px;}
+        h1 { color: rgb(5, 5, 73); text-align: center; margin-bottom: 32px; }
+        table { border-collapse: collapse; width: 100%; border-radius: 5px}
+        th, td { padding: 14px 10px; text-align: left; }
+        tr{ border-radius: 5px;}
+        th { background: rgb(5, 5, 73); color: #fff; }
+        tr:nth-child(even) { background: #f2f2f2; }
+        a { color: rgb(5, 5, 73); font-weight: bold; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .back-link { margin-bottom: 18px; display: block; color: rgb(5, 5, 73);}
+        .status-badge { padding: 4px 13px; border-radius: 18px; font-size: 0.93rem; color: #fff; background: #55bc55; font-weight: bold; }
+        .status-inactive { background: #888;}
+        .status-closed { background: #c0392b;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-link" href="{{ url_for('ownerhome') }}">← Back to Dashboard</a>
+        <h1>Job Posted History</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Created Date</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for job in jobs %}
+                <tr>
+                    <td>{{ job.position }}</td>
+                    <td>
+                        {% if job.description|length > 40 %}
+                            {{ job.description[:40] }}...
+                        {% else %}
+                            {{ job.description }}
+                        {% endif %}
+                    </td>
+                    <td>{{ job.location or '-' }}</td>
+                    <td>{{ job.category or '-' }}</td>
+                    <td>{{ job.jobtype or '-' }}</td>
+                    <td>{{ job.timestamp }}</td>
+                    <td>
+                        <span class="status-badge{% if job.status == 'inactive' %} status-inactive{% elif job.status == 'closed' %} status-closed{% endif %}">
+                            {{ job.status if job.status else 'Active' }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('job_post_detail', job_id=job.id) }}">View Details</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" style="text-align:center;"><i>No jobs posted yet.</i></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

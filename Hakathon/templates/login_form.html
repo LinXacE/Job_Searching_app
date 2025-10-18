@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Login - {{ method|capitalize }}{% endblock %}
+
+{% block content %}
+<div class="login-form">
+    <h2>Login with {{ method|capitalize }}</h2>
+    <form method="post">
+        <label for="value">{{ method|capitalize }}:</label>
+        <input type="text" id="value" name="value" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <input type="submit" value="Login" class="btn">
+    </form>
+</div>
+{% endblock %}

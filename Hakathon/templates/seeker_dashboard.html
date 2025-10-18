@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Seeker Dashboard</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color:rgb(5,5,73);
+        margin: 0;
+        padding: 40px;
+        color: rgb(5,5,73);
+      }
+
+      h1 {
+        text-align: center;
+        color:white;
+        margin-bottom: 30px;
+      }
+      .b-nav-bar{
+        display: flex;
+        background-color: white;
+        height: 50px;
+        align-items: center;
+        border-radius: 5px; 
+      }
+      .b-nav-bar li,ul{
+        list-style: none;
+        margin-right: 30px;
+        color: rgb(5,5,73);
+
+      }
+      .b-nav-bar a{
+        text-decoration: none;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      thead {
+        background-color: rgb(37, 37, 154);
+        color: white;
+      }
+      
+      th,
+      td {
+        padding: 14px 16px;
+        text-align: left;
+      }
+
+      th {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f8f9fb;
+      }
+
+      .no-jobs {
+        text-align: center;
+        padding: 40px;
+        background-color: white;
+        border-radius: 10px;
+        color: #777;
+        font-size: 18px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        margin-top: 20px;
+      }
+      .apply{
+        background-color: rgb(5,5,73);
+        padding: 5px 10px;
+        color: white;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        border: none;
+      }
+      .submit{
+        background-color: rgb(238, 11, 11);
+        padding: 5px 10px;
+        color: white;
+        border-radius: 5px;
+        border: none;
+      }
+      a{
+          color: rgb(5,5,73);
+        }
+    </style>
+  </head>
+  <body>
+   <div class="nav-bar">
+     <ul class="b-nav-bar">
+      <li><a href="{{ url_for('seekerdashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('seekerapplications') }}">|  My Applications</a></li>
+      <li><a href="{{ url_for('seekerjobs') }}">|  Browse Jobs</a></li>
+      <li><a href="{{ url_for('seekerprofile') }}">|  Profile</a></li>
+      <li><a href="{{ url_for('logout') }}">|  Log out</a></li>
+    </ul>
+   </div>
+
+  <div class="container">
+      <h1>Job Seeker Dashboard</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Position</th>
+          <th>Description</th>
+          <th>Location</th>
+          <th>Category</th>
+          <th>Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td>{{ job.position }}</td>
+          <td>{{ job.description }}</td>
+          <td>{{ job.location }}</td>
+          <td>{{ job.category }}</td>
+          <td>{{ job.jobtype }}</td>
+          <td><form
+          action="{{ url_for('seeker_interest', job_id=job.id) }}"
+          method="post"
+          style="display: inline"
+        >
+          <button class="apply" type="submit">Apply</button>
+        </form>
+        <form
+          action="{{ url_for('seeker_skip', job_id=job.id) }}"
+          method="post"
+          style="display: inline"
+        >
+          <button class="submit" type="submit">Skip</button>
+        </form></td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="no-jobs"><i>No jobs available.</i></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+    <div class="no-jobs">No jobs available.</div>
+  </body>
+</html>

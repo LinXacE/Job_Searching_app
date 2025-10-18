@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat-room</title>
+  <style>
+    body {font-family: Arial, sans-serif; background: rgb(5, 5, 73); padding: 40px; display: flex; justify-content: center;}
+    .dashboard {width: 800px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
+    h2 {color: rgb(5,5,73);}
+    .chat-messages {min-height: 350px; border:1px solid #e6e6e6; border-radius:10px; padding:20px; background:#f8f8fc; margin-bottom:18px;}
+    .message {margin-bottom: 18px;}
+    .message .topic {font-weight:bold;}
+    .message .bubble {display:inline-block; background:#e5e5ea; border-radius:7px; padding:10px 14px;}
+    .message.sent .bubble {background: #123c7b; color:white;}
+    .chat-input {display: flex; border-top: 1px solid #ddd; background: #fff;}
+    .chat-input input {flex: 1; border: none; padding: 15px; font-size: 16px;}
+    .chat-input button {background: rgb(5,5,73); color: white; border: none; padding: 12px 20px; cursor: pointer; font-size: 16px; border-radius: 7px;}
+    .chat-input button:hover {background: #3354a1;}
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h2>Chat with {{ selected_seeker.username }}</h2>
+    <div class="chat-messages">
+      {% for msg in messages %}
+        <div class="message {% if msg.sendername == user.username %}sent{% else %}received{% endif %}">
+          <span class="topic">{{ msg.sendername }}:</span>
+          <span class="bubble">{{ msg.text }}</span>
+          <span style="font-size:12px;color:#888;">{{ msg.timestamp }}</span>
+        </div>
+      {% else %}
+        <p>No messages yet.</p>
+      {% endfor %}
+    </div>
+    <form method="POST">
+      <input type="text" name="text" placeholder="Type a message..." required>
+      <button type="submit">Send</button>
+    </form>
+    <p><a href="{{ url_for('ownerhome') }}">Back to Dashboard</a></p>
+  </div>
+</body>
+</html>

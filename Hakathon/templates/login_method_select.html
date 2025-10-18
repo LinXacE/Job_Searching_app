@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Method</title>
+    <style>
+      body{ display: flex;
+         align-items: center;
+         justify-content: center;
+         height: 100vh;
+         font-family: Arial;
+         background-color:rgb(5, 5, 73) ;
+        }
+      .container { 
+        text-align: center;
+        background-color: white;
+        border-radius: 5px;
+      }
+      button { 
+        font-size: 16px;
+        margin: 10px;
+        padding: 10px 30px;
+        background: rgb(5, 5, 73);
+        color: white;
+        border: none;
+        border-radius: 5px;}
+
+      button:hover { 
+        background: #3354a1;
+      }
+      h2{
+        color: rgb(5, 5, 73);
+      
+      }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Log in with</h2>
+    <a href="{{ url_for('loginmethod', method='email') }}"><button>Email</button></a>
+    <a href="{{ url_for('loginmethod', method='phone') }}"><button>Phone Number</button></a>
+  </div>
+
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Company Profile - Career Connecting</title>
+  <style>
+    :root {
+      --navy: rgb(5, 5, 73);
+      --navy-light: #123c7b;
+      --white: #ffffff;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--navy);
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+    .company-container {
+      max-width: 800px;
+      width: 100%;
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      overflow: hidden;
+      padding: 25px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--navy);
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    form input, form textarea {
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+    form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    form button {
+      padding: 12px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background: var(--navy-light);
+    }
+    .submitted-data {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 8px;
+      background:var(--white);
+      border: 1px solid #eee;
+    }
+    .submitted-data h2 {
+      margin-bottom: 15px;
+      color: var(--navy);
+    }
+    .submitted-data p {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="company-container">
+    <h1>Register Your Company</h1>
+    <form>
+      <input type="text"  placeholder="Company Name" required>
+      <input type="text"  placeholder="Industry (e.g. IT, Marketing)" required>
+      <textarea placeholder="About the Company" required></textarea>
+      <input type="text" placeholder="Location" required>
+      <input type="text" placeholder="Website URL">
+      <input type="email" placeholder="Contact Email" required>
+      <input type="tel" placeholder="Contact Phone">
+      <button type="submit">Save Company Profile</button>
+    </form>
+  </div>
+</body>
+</html>

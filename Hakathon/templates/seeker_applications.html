@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Job Applications</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #050a44;
+      margin: 0;
+      padding: 40px 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .applications-container {
+      width: 90%;
+      max-width: 1100px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+     h2 {
+      text-align: center;
+      color: #0b0b60;
+       font-size: 1.8em;
+        padding-bottom: 10px;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    thead {
+      background: rgb(5,5,73);
+      color: #fff;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 16px;
+      font-size: 15px;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f7f9fc;
+    }
+
+    tbody tr:hover {
+      background: #eef3ff;
+      transition: 0.3s;
+    }
+
+    .no-jobs {
+      text-align: center;
+      color: #888;
+      padding: 30px;
+      background: #f3f6f8;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    /* --- Buttons --- */
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+    }
+
+    .btn-interest {
+      background: rgb(5,5,73);
+    }
+
+    .btn-interest:hover {
+      background: rgb(12,12,103);
+    }
+
+    .btn-skip {
+      background:rgb(242, 16, 16);
+    }
+
+    .btn-skip:hover {
+      background: rgb(12,12,103);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      th, td {
+        font-size: 13px;
+      }
+
+      .btn-group {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="applications-container">
+    <h2>My Job Applications</h2>
+
+   
+    <table>
+      <thead>
+        <tr>
+          <th>Job</th>
+          <th>Owner</th>
+          <th>Status</th>
+          <th>Applied At</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td>{{ job.position }}</td>
+          <td>{{ job.description }}</td>
+          <td>{{ job.location }}</td>
+          <td>{{ job.category }}</td>
+        </tr>
+       
+      </tbody>
+    </table>
+    
+    <div class="no-jobs">No jobs available.</div>
+   
+
+    <div class="btn-group">
+      <button class="btn btn-interest">Interest</button>
+      <button class="btn btn-skip">Skip</button>
+    </div>
+  </div>
+</body>
+</html>

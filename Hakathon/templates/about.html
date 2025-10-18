@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About HTML</title>
+    <style>
+        /* CSS Styles */
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color:rgb(5, 5, 73);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh; /* မျက်နှာပြင် အလယ်လောက်မှာရှိစေရန် */
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* ၂ တန်း ခွဲထားပါတယ် */
+            gap: 30px; /* Card တွေကြား ခြားနားချက်ကို ပိုများစေပါတယ် */
+            max-width: 800px; /* Grid ရဲ့ အကျယ်ကို ၈၀၀px လောက်ထားပါတယ် */
+            padding: 20px;
+        }
+        
+        /* Member Card Styles */
+        .member-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative; 
+            transition: transform 0.3s ease;
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Image and Overlay Styles */
+        .image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* 1:1 square ratio */
+            overflow: hidden;
+        }
+
+        .member-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.95);
+            transition: filter 0.3s ease;
+        }
+        
+       
+
+        /* Overlay (Hidden Info) Styles */
+        .contact-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(5, 5, 73, 0.85); /* Dark blue overlay */
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0; /* ပထမတော့ ဝှက်ထားသည် */
+            transition: opacity 0.3s ease;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .member-card:hover .contact-overlay {
+            opacity: 1; /* Mouse ထောက်ရင် ပေါ်လာစေရန် */
+        }
+
+        .overlay-name {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #3498db; 
+        }
+
+        .overlay-detail {
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+
+        /* Info Below Image Styles */
+        .member-info {
+            padding: 15px;
+            text-align: left;
+        }
+
+        .member-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .member-title {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        /* Responsive Design (1 column on mobile) */
+        @media (max-width: 576px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="team-grid">
+    
+    <div class="member-card">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='Thurain.jpg') }}" alt="Thurain" class="member-image">
+            <div class="contact-overlay">
+                <div class="overlay-name">Thurain Tun</div>
+                <div class="overlay-detail">Phone: +95 9 12345678</div>
+                <div class="overlay-detail">Email: thurain@example.com</div>
+            </div>
+        </div>
+        <div class="member-info">
+            <div class="member-name">Thurain Tun</div>
+            <div class="member-title">CEO and Founder</div>
+        </div>
+    </div>
+
+    <div class="member-card">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='Paing Soe Khant.jpg') }}" alt="Paing" class="member-image">
+            <div class="contact-overlay">
+                <div class="overlay-name">Paing Soe Khant</div>
+                <div class="overlay-detail">Phone: +95 9 98765432</div>
+                <div class="overlay-detail">Email: paingsoe@example.com</div>
+            </div>
+        </div>
+        <div class="member-info">
+            <div class="member-name">Paing Soe Khant </div>
+            <div class="member-title">Head of Leader</div>
+        </div>
+    </div>
+
+    <div class="member-card">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='Thet.jpg') }}" alt="Thet" class="member-image">
+            <div class="contact-overlay">
+                <div class="overlay-name">Thet Mon Zaw</div>
+                <div class="overlay-detail">Phone: +95 9 11223344</div>
+                <div class="overlay-detail">Email: thet@example.com</div>
+            </div>
+        </div>
+        <div class="member-info">
+            <div class="member-name">Thet Mon Zaw</div>
+            <div class="member-title">Financial Controller</div>
+        </div>
+    </div>
+
+    <div class="member-card">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='j.jpg.jpg') }}" alt="Hsu Myat" class="member-image">
+            <div class="contact-overlay">
+                <div class="overlay-name">Hsu Myat Thaw</div>
+                <div class="overlay-detail">Phone: +95 9 55667788</div>
+                <div class="overlay-detail">Email: myat@example.com</div>
+            </div>
+        </div>
+        <div class="member-info">
+            <div class="member-name">Hsu Myat Thaw</div>
+            <div class="member-title">Head of Customer Solution</div>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>

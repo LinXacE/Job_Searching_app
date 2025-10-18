@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+      <style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: rgb(14, 2, 79);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-box {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.logo {
+  font-size: 32px;
+  color: #0b2545;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.login-box h2 {
+  color: #0b2545;
+  margin-bottom: 10px;
+}
+.subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(14, 2, 79);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+.btn-login:hover {
+  background-color: #193a63;
+  transform: scale(1.02);
+}
+
+.register-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #333;
+}
+.register-text a {
+  color: #0b2545;
+  font-weight: bold;
+  text-decoration: none;
+}
+.register-text a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+      </style>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h1 class="logo">Opportune</h1>
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Login to continue your career journey </p>
+      
+      <form action="/login" method="POST">
+        <input type="email" name="email" placeholder="Email Address" required>
+        <input type="password" name="password" placeholder="Password" required>
+        
+        <button type="submit" class="btn-login">Login</button>
+      </form>
+
+      <p class="register-text">
+        Don't have an account? <a href="login_method.html">Register</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

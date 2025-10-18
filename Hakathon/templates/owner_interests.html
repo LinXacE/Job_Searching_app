@@ -1,0 +1,140 @@
+<style>
+
+    
+    body {
+
+        background-color: rgb(5, 5, 73); 
+        color: #ecf0f1;
+        font-family: Arial, sans-serif;
+    }
+
+    .interest-container {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 25px;
+        background-color:white; 
+        box-shadow: 0 5px 15px  rgb(5, 5, 73);
+        border-radius: 10px;
+    }
+
+    h1 {
+        color:  rgb(5, 5, 73); 
+        padding-bottom: 0; 
+        margin-bottom: 25px;
+        font-size: 2em;
+        text-align: center;
+    }
+
+    /* Table Styles for Dark Mode */
+    .interest-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .interest-table th, .interest-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid  rgb(5, 5, 73); 
+    }
+
+    .interest-table th {
+        background-color: rgb(5, 5, 73); 
+        color: #ecf0f1; 
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.9em;
+    }
+
+    .interest-table td {
+        color: rgb(5, 5, 73); 
+    }
+    
+
+    .applicant-link {
+        color:  rgb(5, 5, 73); 
+        text-decoration: none;
+    }
+
+   
+
+    /* No Interests Message Style */
+    .no-interests-message {
+        text-align: center;
+        padding: 40px;
+        color: #95a5a6;
+        font-style: italic;
+        background-color: rgb(5, 5, 73);
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+
+    /* Buttons Section */
+    .button-group {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .action-button {
+        padding: 12px 25px;
+        margin: 0 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-transform: uppercase;
+        font-weight: bold;
+        min-width: 120px;
+    }
+
+    .button-enable {
+        background-color:  rgb(5, 5, 73); 
+        color: white;
+    }
+
+    
+
+    .button-chat {
+        background-color: rgb(7, 123, 19); 
+        color: white;
+    }
+
+   
+</style>
+
+<div class="interest-container">
+    <h1>People Interested in "{{ job.position }}"</h1>
+
+   
+        <table class="interest-table">
+            <thead>
+                <tr>
+                    <th>Applicant</th>
+                    <th>Interest Date</th>
+                 </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                            {{ interest.jobseekerid }}
+                        
+                    </td>
+                    <td>{{ interest.timestamp }}</td>
+                
+                </tr>
+            
+            </tbody>
+        </table>
+    
+        <p class="no-interests-message">No interests yet.</p>
+    
+    
+    <div class="button-group">
+        <button class="action-button button-enable">Enable </button>
+        <button class="action-button button-chat"> Chats</button>
+    </div>
+
+</div>

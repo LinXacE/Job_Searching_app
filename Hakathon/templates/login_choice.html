@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose Login Method</title>
+</head>
+<style>
+        body{ display: flex;
+         align-items: center;
+         justify-content: center;
+         height: 100vh;
+         font-family: Arial;
+         background-color:rgb(5, 5, 73) ;
+        }
+      .container { 
+        text-align: center;
+        background-color: white;
+        border-radius: 5px;
+      }
+      button { 
+        font-size: 16px;
+        margin: 10px;
+        padding: 10px 30px;
+        background: rgb(5, 5, 73);
+        color: white;
+        border: none;
+        border-radius: 5px;}
+
+      button:hover { 
+        background: #3354a1;
+      }
+      h2{
+        color: rgb(5, 5, 73);
+      
+      }
+    </style>
+<body>
+    <div class="container">
+        <h2>Login Method</h2>
+    <form action="/login_method_select" method="get">
+        <button type="submit" name="method" value="email" >Login with Email</button>
+        <button type="submit" name="method" value="phone" >Login with Phone</button>
+    </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Message Job Seeker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Message {{ seeker.fullname }}</h2>
+        <p><strong>Email:</strong> {{ seeker.email }}</p>
+        <p><strong>Profile:</strong> {{ seeker.profile or "No profile data" }}</p>
+        
+        <form action="{{ url_for('send_message_to_seeker', seeker_id=seeker.id) }}" method="post">
+            <div class="form-group">
+                <label for="message">Your Message:</label>
+                <textarea name="message" id="message" class="form-control" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+            <a href="{{ url_for('ownerhome') }}" class="btn btn-secondary">Back to Owner Home</a>
+        </form>
+    </div>
+</body>
+</html>

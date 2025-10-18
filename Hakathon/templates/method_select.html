@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Method</title>
+    <style>
+      body { 
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        height: 100vh; 
+        font-family: Arial;
+        background-color: rgb(5, 5, 73);
+        color:  rgb(5, 5, 73);
+    }
+      .container {
+        text-align: center;
+        background-color: white;
+        border-radius: 5px;
+     }
+      button { 
+        font-size: 16px;
+        margin: 10px; 
+        padding: 10px 30px; 
+        background: rgb(5, 5, 73);
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+      button:hover { 
+        background: #3354a1; 
+    }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Select Login Method </h1>
+    <a href="{{ url_for('register', role=role, method='email') }}"><button>Register with Email</button></a>
+    <a href="{{ url_for('register', role=role, method='phone') }}"><button>Register with Phone</button></a>
+  </div>
+</body>
+</html>

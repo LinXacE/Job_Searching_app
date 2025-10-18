@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seeker CV</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color:rgb(5, 5, 73);;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .cv-container {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 30px 40px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    h2 {
+      text-align: center;
+       font-size: 1.8em;
+        padding-bottom: 10px;
+      color: #0b0b60;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+    }
+
+    .cv-field {
+      margin-bottom: 18px;
+    }
+
+    .cv-field strong {
+      color: #1a237e;
+      font-weight: 600;
+    }
+
+    hr {
+      border: none;
+      border-bottom: 1px dashed #ccc;
+      margin: 15px 0;
+    }
+
+    .bio-box {
+      background: #f3f6f8;
+      padding: 15px;
+      border-radius: 8px;
+      color: #333;
+      font-size: 15px;
+    }
+
+    /* --- Buttons --- */
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      flex: 1;
+      margin: 0 8px;
+      padding: 12px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+    }
+
+    .btn-interest {
+      background:rgb(5, 5, 73);
+    }
+
+    .btn-interest:hover {
+      background:rgb(12,12,103);
+    }
+
+    .btn-skip {
+      background:rgb(5, 5, 73);
+    }
+
+    .btn-skip:hover {
+      background: rgb(12,12,103);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .btn-group {
+        flex-direction: column;
+      }
+      .btn {
+        margin: 6px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="cv-container">
+    <h2>{{ seeker.username }}'s CV</h2>
+
+    <div class="cv-field">
+      <strong>Email/Phone:</strong> {{ seeker.value }}
+    </div>
+
+    <div class="cv-field">
+      <strong>Role:</strong> {{ seeker.role }}
+    </div>
+
+    <div class="cv-field">
+      <strong>Status:</strong> {{ seeker.status if seeker.status else "No status" }}
+    </div>
+
+    <hr />
+
+    <div class="cv-field">
+      <strong>Bio:</strong>
+      <div class="bio-box">
+        {{ seeker.bio if seeker.bio else "Not provided" }}
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-interest">Interest</button>
+      <button class="btn btn-skip">Skip</button>
+    </div>
+  </div>
+</body>
+</html>
