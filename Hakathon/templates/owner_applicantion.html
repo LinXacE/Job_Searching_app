@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owner Applications</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: rgb(5,5,73);
+      min-height: 100vh;
+      padding: 40px;
+      color: rgb(5,5,73);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      color:white ;
+    }
+
+    /* Table container */
+    .table-container {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      overflow-x: auto;
+      padding: 20px;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 950px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ecf0f1;
+    }
+
+    th {
+      background: rgb(5,5,73);
+      color: white;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover {
+      background-color: #f8f9fa;
+      transition: background 0.2s ease;
+    }
+
+    td {
+      font-size: 14px;
+      color: #34495e;
+    }
+
+    /* Action buttons container */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 7px 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: #fff;
+      transition: 0.3s;
+    }
+
+    .btn-enable {
+      background: #3498db;
+    }
+    .btn-enable:hover {
+      background: #217dbb;
+    }
+
+    .btn-chat {
+      background: #2ecc71;
+    }
+    .btn-chat:hover {
+      background: #239b56;
+    }
+
+    /* Empty state */
+    .no-applicants {
+      text-align: center;
+      padding: 30px;
+      font-size: 16px;
+      color: #7f8c8d;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { padding: 20px; }
+      h1 { font-size: 24px; }
+      th, td { font-size: 13px; padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Applicants List</h1>
+
+  <div class="table-container">
+   
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Interests</th>
+          <th>Education</th>
+          <th>Experience</th>
+          <th>Skills</th>
+          <th>Application Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>{{ seeker.full_name }}</td>
+          <td>{{ seeker.age }}</td>
+          <td>{{ seeker.contact_email }}</td>
+          <td>{{ seeker.contact_phone }}</td>
+          <td>{{ seeker.interests }}</td>
+          <td>{{ seeker.education }}</td>
+          <td>{{ seeker.experience }}</td>
+          <td>{{ seeker.skills }}</td>
+          <td>{{ interest.timestamp }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-enable">Enable</button>
+              <button class="btn btn-chat">Chat</button>
+            </div>
+          </td>
+        </tr>
+       
+      </tbody>
+    </table>
+    
+    <div class="no-applicants">No applicants yet.</div>
+   
+  </div>
+
+</body>
+</html>

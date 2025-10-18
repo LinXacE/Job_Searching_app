@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Owner Profile</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:rgb(5, 5, 73); margin: 0; padding: 0;color: rgb(5, 5, 73); }
+        .profile-container { max-width: 500px; margin: 40px auto; background: #fff; padding: 24px 32px; border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.07); }
+        h1 { text-align: center; margin-bottom: 16px; }
+        .field { margin-bottom: 16px; }
+        .field label { font-weight: bold; display: block; }
+        .field span { color: #222; }
+        .btn { display: block; width: 100%; padding: 12px; background: rgb(5, 5, 73); color: #fff; border: none; border-radius: 6px; margin-top: 18px; }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>Owner Profile</h1>
+        <div class="field">
+            <label>Name:</label>
+            <span>{{ owner.username }}</span>
+        </div>
+        <div class="field">
+            <label>Email:</label>
+            <span>{{ owner.value }}</span>
+        </div>
+        <div class="field">
+            <label>Business Name:</label>
+            <span>{{ owner.business_name if owner.business_name else "Not provided" }}</span>
+        </div>
+        <div class="field">
+            <label>Location:</label>
+            <span>{{ owner.location if owner.location else "Not provided" }}</span>
+        </div>
+        <div class="field">
+            <label>Bio/Info:</label>
+            <span>{{ owner.bio if owner.bio else "No info yet." }}</span>
+        </div>
+        <div class="field">
+            <label>Jobs Posted:</label>
+            <span>{{ total_jobs }}</span>
+        </div>
+        <!-- Add more fields if needed -->
+        <a href="{{ url_for('ownerhome') }}"><button class="btn">Back to Dashboard</button></a>
+    </div>
+</body>
+</html>

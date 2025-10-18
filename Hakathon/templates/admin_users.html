@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Users</title>
+    <style>
+      :root {
+        --navy: rgb(5, 5, 73);
+        --navy-light: #123c7b;
+        --white: #ffffff;
+        --green: #138544;
+        --red: #f21b1b;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: var(--white);
+        margin: 0;
+        padding: 20px;
+        color: #333;
+      }
+      h2 {
+        color: var(--navy);
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--white);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      thead {
+        background: var(--navy);
+        color: var(--white);
+      }
+
+      thead th {
+        padding: 20px;
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      td form {
+        display: inline;
+      }
+      button {
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        color: white;
+        transition: background 0.3s ease;
+        margin: 5px;
+      }
+      .promote {
+        background-color: var(--navy);
+      }
+      .promote:hover {
+        background-color: #385e98;
+      }
+      .remote:hover {
+        background-color: #041e0f;
+      }
+      .remote {
+        background-color: var(--green);
+      }
+      .delete {
+        background-color: var(--red);
+      }
+      .delete:hover {
+        background-color: #430a0a;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>User List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Email/Phone</th>
+          <th>Password</th>
+          <th>Location</th>
+          <th>CV</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.role }}</td>
+          <td>{{ user.value }}</td>
+          <td>********</td>
+          <td>{{ user.location if user.location else '-' }}</td>
+          <td>{{ user.cv if user.cv else '-' }}</td>
+          <td>
+            {% if user.isadmin %} {% if user.isprimaryadmin %} Primary Admin {%
+            else %} Admin {% endif %} {% else %} Regular User {% endif %}
+          </td>
+          <td>
+            {% if not user.isprimaryadmin %} {% if not user.isadmin %}
+            <form
+              action="{{ url_for('promote_user', user_id=user.id) }}"
+              method="post"
+            >
+              <button type="submit" class="promote">Promote</button>
+            </form>
+            {% else %}
+            <form
+              action="{{ url_for('demote_user', user_id=user.id) }}"
+              method="post"
+            >
+              <button type="submit" class="remote">Demote</button>
+            </form>
+            {% endif %}
+            <form
+              action="{{ url_for('delete_user', user_id=user.id) }}"
+              method="post"
+              style="display: inline"
+            >
+              <button
+                type="submit"
+                class="delete"
+                onclick="return confirm('Are you sure you want to delete this user?');"
+              >
+                Delete
+              </button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

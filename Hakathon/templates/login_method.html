@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Method - ProJob</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+      
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial; 
+        background-color: white;
+        border-radius: 5px;
+      }
+      button { 
+        font-size: 16px;
+        margin: 10px;
+        padding: 10px 30px;
+        background: rgb(5, 5, 73);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+      button:hover { 
+        background: #3354a1;
+      }
+      h2{
+        color: rgb(5, 5, 73);
+        text-align: center;
+        margin-top: 150px;
+      }
+    </style>
+</head>
+<body>
+    <h2>Select Login Method</h2>
+    <div class="container">
+        <form action="/login_method_select" method="get">
+        <button type="submit" name="method" value="email" class="btn">Login with Email</button>
+        <button type="submit" name="method" value="phone" class="btn">Login with Phone</button>
+    </form>
+    </div>
+</body>
+</html>

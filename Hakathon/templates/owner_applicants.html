@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Job Applicants{% endblock %}
+{% block content %}
+<h2>Applicants for "{{ job.position }}"</h2>
+<table class="applicants-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Interests</th>
+            <th>Education</th>
+            <th>Experience</th>
+            <th>Skills</th>
+            <th>Application Time</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for interest, seeker in seekers|zip(interests) %}
+        <tr>
+            <td>{{ seeker.full_name }}</td>
+            <td>{{ seeker.age }}</td>
+            <td>{{ seeker.contact_email }}</td>
+            <td>{{ seeker.contact_phone }}</td>
+            <td>{{ seeker.interests }}</td>
+            <td>{{ seeker.education }}</td>
+            <td>{{ seeker.experience }}</td>
+            <td>{{ seeker.skills }}</td>
+            <td>{{ interest.timestamp }}</td>
+            <td>
+                <a href="/chat/{{ job.id }}/{{ seeker.id }}" class="btn">Enable Chat</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="10">No applicants yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

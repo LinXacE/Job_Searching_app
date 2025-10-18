@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat room</title>
+    <style>
+    :root {
+      --navy: rgb(5, 5, 73);
+      --navy-light: #123c7b;
+      --light-gray: #f5f5f5;
+      --white: #ffffff;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+   
+    body {
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+     .sidebar{
+        width: 280px;
+        background-color: var(--white);
+        border-right: 1px solid;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-header{
+        padding: 15px;
+        background-color: var(--navy);
+        color: var(--white);
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .chat-list{
+        flex: 1;
+        overflow-y:auto ;
+    }
+    .chat-item{
+        padding: 15px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+    .chat-item strong{
+        display: block;
+        font-size: 16px;
+    }
+    .chat-header{
+        background-color: var(--navy);
+        color: var(--white);
+        padding: 15px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .chat-messages{
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+    }
+    .message{
+        margin-bottom: 15px;
+        display: flex;
+    }
+    .message.sent {
+      justify-content: flex-end;
+    }
+    .message .bubble {
+      padding: 10px 15px;
+      border-radius: 15px;
+      background-color: #123c7b;
+      max-width: 70%;
+    }
+    .message.received .bubble {
+      background: #e5e5ea;
+      border-top-left-radius: 0;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ddd;
+      background: var(--white);
+    }
+    .chat-input input {
+      flex: 1;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      outline: none;
+    }
+    .chat-input button {
+      background: var(--navy);
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 15px;
+    }
+    .chat-input button:hover {
+      background: var(--navy-light);
+    }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+
+    <div class="sidebar-header">Messages</div>
+
+    <div class="chat-list">
+
+      <div class="chat-item">
+        <strong>KOKO</strong>
+        <small>job interview</small>
+      </div>
+
+      <div class="chat-item">
+        <strong>Aung Aung</strong>
+        <small>Location-Mdy</small>
+      </div>
+
+      <div class="chat-item">
+        <strong>Mi Mi</strong>
+        <small>forntend Developer</small>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="chat-window">
+
+    <div class="chat-header">KOKO</div>
+
+    <div class="chat-messages">
+
+      <div class="message received">
+        <div class="bubble">Hi!Why do you want to work here?</div>
+      </div>
+
+      <div class="message sent">
+        <div class="bubble">....</div>
+      </div>
+
+      <div class="message received">
+        <div class="bubble">What do you know about our company?</div>
+      </div>
+
+    </div>
+
+    <div class="chat-input">
+      <input type="text" placeholder="Type a message...">
+      <button>Send</button>
+    </div>
+
+  </div>
+
+</body>
+</html>

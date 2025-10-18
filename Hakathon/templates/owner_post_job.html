@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post a Job</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background-color: rgb(5, 5, 73);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    .post-job-container {
+      background: #fff;
+      width: 100%;
+      max-width: 600px;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 26px;
+      color: #2c3e50;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #34495e;
+      margin-bottom: 6px;
+      margin-top: 14px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+    }
+
+    textarea {
+      resize: none;
+      height: 90px;
+    }
+
+    select {
+      background-color: #fff;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      font-size: 16px;
+      background: rgb(5, 5, 73);
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #217dbb;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 500px) {
+      .post-job-container {
+        padding: 25px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="post-job-container">
+    <h1>Post a Job</h1>
+    <form action="#" method="post">
+      <label for="position">Position:</label>
+      <input type="text" id="position" name="position" placeholder="Enter job title" required>
+
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" placeholder="Write job description..." required></textarea>
+
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" placeholder="Enter job location" required>
+
+      <label for="category">Category:</label>
+      <input type="text" id="category" name="category" placeholder="Enter job category" required>
+
+      <label for="jobType">Job Type:</label>
+      <select id="jobType" name="jobType" required>
+        <option value="">-- Select Job Type --</option>
+        <option value="Full Time">Full Time</option>
+        <option value="Part Time">Part Time</option>
+        <option value="Internship">Internship</option>
+        <option value="Remote">Remote</option>
+      </select>
+
+      <button type="submit">Post Job</button>
+    </form>
+  </div>
+
+</body>
+</html>

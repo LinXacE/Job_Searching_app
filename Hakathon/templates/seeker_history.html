@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job History</title>
+    <style>
+        body { 
+          font-family: Arial; 
+          margin: 30px;
+          color:  rgb(14, 2, 79);
+        }
+        .jobwrap { 
+          border: 1px solid #eee; 
+          padding: 16px;
+          border-radius: 9px;
+          margin-bottom: 20px;
+        }
+        .status { 
+          color: #537fe7; 
+          font-weight: bold;
+        }
+        button { 
+          background:  rgb(14, 2, 79);
+          color:white; 
+          border: none; 
+          border-radius: 5px;
+          padding: 10px 20px;
+          cursor: pointer;
+        }
+        button:hover {
+           background: #3354a1;
+        }
+        .container{
+          display: flex;
+          justify-content: space-between;
+        }
+        .jobwrap{
+          margin-bottom: 10px;
+          padding-bottom: 20px;
+          border: 1px solid;
+        }
+        h2{
+          text-align: center;
+        }
+        .back-btn{
+          float: right;
+          margin-left: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+  <h2>Your Job History</h2>
+<div class="container">
+{% for item in records %}
+  <div class="jobwrap">
+    <strong>{{ item.job.position }}</strong>
+    <span class="status">({{ item.record.action }})</span><br><br>
+    <i>{{ item.job.description }}</i><br>
+    <u>Location: {{ item.job.location }}</u><br>
+    {% if item.record.action != 'interested' %}
+      <form action="{{ url_for('seeker_interest', job_id=item.job.id) }}" method="post" style="display:inline;">
+        <button type="submit">Mark as Interested</button>
+      </form>
+    {% endif %}
+  </div>
+{% else %}
+  <p>No history yet.</p>
+{% endfor %}
+</div>
+
+<div>
+  <a href="{{ url_for('seekerjobs') }}"><button class="back-btn">Back to Jobs</button></a>
+   <a href="{{ url_for('seekerjobs') }}"><button class="back-btn">Back to Dashboard</button></a>
+</div>
+</body>
+</html>
