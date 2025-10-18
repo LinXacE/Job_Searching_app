@@ -35,18 +35,36 @@
       float: right;
     }
 
+    .back {
+      background: #28a745;
+    }
+
+    .back:hover {
+      background: #218838;
+    }
+
     .jobwrap {
       display: flex;
       justify-content: space-between;
+    }
+
+    .navigation {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #eee;
     }
   </style>
 </head>
 
 <body>
+  <div class="navigation">
+    <a href="{{ url_for('seekerdashboard') }}"><button class="back">← Back to Dashboard</button></a>
+    <a href="{{ url_for('seekersetlocation') }}"><button>Update Location/CV</button></a>
+    <a href="{{ url_for('seekerhistory') }}"><button>View Swipe History</button></a>
+    <a href="{{ url_for('logout') }}"><button class="log">Logout</button></a>
+  </div>
+
   <h1>Available Jobs in Your Location</h1>
-  <a href="{{ url_for('seekersetlocation') }}"><button>Update Location/CV</button></a>
-  <a href="{{ url_for('seekerhistory') }}"><button>View Swipe History</button></a>
-  <a href="{{ url_for('logout') }}"><button class="log">Logout</button></a>
 
   {% for job in jobs %}
   <div class="jobwrap">
