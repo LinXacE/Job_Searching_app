@@ -1,13 +1,12 @@
 body { min-height: 100vh; display: flex; flex-direction: column; margin: 0; background: #f8fafc; }
 
-/* Header */
-header { width: 100%; }
+/* Force header/footer full width */
+header, footer { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding-left: 0; padding-right: 0; }
+
+/* Header nav */
 nav { background: #183573; padding: 15px 30px; display:flex; gap:22px; align-items:center; }
 nav a { color: #fff; text-decoration: none; margin-right: 0; font-weight:600; }
 nav a:last-child { margin-left:auto; }
 
-/* Main card */
+/* Ensure main card doesn’t wrap header/footer */
 main { flex: 1; max-width: 900px; margin: 30px auto; background: #fff; padding: 28px; border-radius: 16px; box-shadow: 0 4px 34px rgba(24,53,115,0.06); }
-
-/* Footer */
-footer { width: 100%; background: #183573; color: #fff; text-align: center; padding: 15px 28px; }
