@@ -1,159 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat room</title>
-    <style>
-    :root {
-      --navy: rgb(5, 5, 73);
-      --navy-light: #123c7b;
-      --light-gray: #f5f5f5;
-      --white: #ffffff;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-   
-    body {
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-    }
-     .sidebar{
-        width: 280px;
-        background-color: var(--white);
-        border-right: 1px solid;
-        display: flex;
-        flex-direction: column;
-    }
-    .sidebar-header{
-        padding: 15px;
-        background-color: var(--navy);
-        color: var(--white);
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .chat-list{
-        flex: 1;
-        overflow-y:auto ;
-    }
-    .chat-item{
-        padding: 15px;
-        border-bottom: 1px solid var(--light-gray);
-    }
-    .chat-item strong{
-        display: block;
-        font-size: 16px;
-    }
-    .chat-header{
-        background-color: var(--navy);
-        color: var(--white);
-        padding: 15px;
-        font-size: 16px;
-        font-weight: bold;
-    }
-    .chat-messages{
-        flex: 1;
-        padding: 15px;
-        overflow-y: auto;
-    }
-    .message{
-        margin-bottom: 15px;
-        display: flex;
-    }
-    .message.sent {
-      justify-content: flex-end;
-    }
-    .message .bubble {
-      padding: 10px 15px;
-      border-radius: 15px;
-      background-color: #123c7b;
-      max-width: 70%;
-    }
-    .message.received .bubble {
-      background: #e5e5ea;
-      border-top-left-radius: 0;
-    }
-    .chat-input {
-      display: flex;
-      border-top: 1px solid #ddd;
-      background: var(--white);
-    }
-    .chat-input input {
-      flex: 1;
-      border: none;
-      padding: 15px;
-      font-size: 16px;
-      outline: none;
-    }
-    .chat-input button {
-      background: var(--navy);
-      color: white;
-      border: none;
-      padding: 15px 20px;
-      cursor: pointer;
-      font-size: 16px;
-      border-radius: 15px;
-    }
-    .chat-input button:hover {
-      background: var(--navy-light);
-    }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages</title>
+  <style>
+    :root { --navy: rgb(5, 5, 73); --navy-light: #123c7b; --light-gray: #f5f5f5; --white: #ffffff; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; height: 100vh; display: flex; }
+    .sidebar { width: 280px; background: var(--white); border-right: 1px solid #e6e6e6; display: flex; flex-direction: column; }
+    .sidebar-header { padding: 15px; background: var(--navy); color: var(--white); font-size: 18px; font-weight: bold; }
+    .chat-list { flex: 1; overflow-y: auto; }
+    .chat-item { padding: 12px 15px; border-bottom: 1px solid var(--light-gray); cursor: pointer; }
+    .chat-item a { color: inherit; text-decoration: none; display: block; }
+    .chat-item strong { display: block; font-size: 16px; }
+    .chat-item small { color: #666; display: block; margin-top: 2px; }
+    .chat-window { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .chat-header { background: var(--navy); color: var(--white); padding: 15px; font-size: 16px; font-weight: bold; }
+    .chat-messages { flex: 1; padding: 15px; overflow-y: auto; background: #fafafa; }
+    .message { margin-bottom: 12px; display: flex; }
+    .message.sent { justify-content: flex-end; }
+    .bubble { padding: 10px 14px; border-radius: 14px; max-width: 70%; word-wrap: break-word; background: #e5e5ea; }
+    .message.sent .bubble { background: #123c7b; color: #fff; border-top-right-radius: 0; }
+    .message.received .bubble { background: #e5e5ea; color: #000; border-top-left-radius: 0; }
+    .meta { font-size: 12px; color: #888; margin-top: 4px; }
+    .chat-input { display: flex; border-top: 1px solid #ddd; background: var(--white); padding: 10px; gap: 8px; }
+    .chat-input input { flex: 1; border: 1px solid #ddd; padding: 12px; font-size: 15px; border-radius: 10px; outline: none; }
+    .chat-input button { background: var(--navy); color: #fff; border: none; padding: 12px 18px; cursor: pointer; font-size: 15px; border-radius: 10px; }
+    .empty { padding: 20px; color: #666; }
+  </style>
 </head>
 <body>
-    <div class="sidebar">
-
+  <!-- Left: conversations list -->
+  <div class="sidebar">
     <div class="sidebar-header">Messages</div>
-
     <div class="chat-list">
-
-      <div class="chat-item">
-        <strong>KOKO</strong>
-        <small>job interview</small>
-      </div>
-
-      <div class="chat-item">
-        <strong>Aung Aung</strong>
-        <small>Location-Mdy</small>
-      </div>
-
-      <div class="chat-item">
-        <strong>Mi Mi</strong>
-        <small>forntend Developer</small>
-      </div>
-
+      {% if conversations and conversations|length > 0 %}
+        {% for seeker, last in conversations %}
+          <div class="chat-item">
+            <a href="{{ url_for('owner_messages', seeker_id=seeker.id) }}">
+              <strong>{{ seeker.full_name or seeker.username }}</strong>
+              <small>{{ last or 'No messages yet' }}</small>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty">No conversations yet.</div>
+      {% endif %}
     </div>
   </div>
 
+  <!-- Right: selected chat -->
   <div class="chat-window">
-
-    <div class="chat-header">KOKO</div>
-
-    <div class="chat-messages">
-
-      <div class="message received">
-        <div class="bubble">Hi!Why do you want to work here?</div>
+    {% if selected_seeker %}
+      <div class="chat-header">
+        {{ selected_seeker.full_name or selected_seeker.username }}
       </div>
 
-      <div class="message sent">
-        <div class="bubble">....</div>
+      <div class="chat-messages" id="chat-messages">
+        {% if chat_history and chat_history|length > 0 %}
+          {% for msg in chat_history %}
+            {% set is_owner = (msg.sender_id == owner.id) %}
+            <div class="message {{ 'sent' if is_owner else 'received' }}">
+              <div class="bubble">
+                {{ msg.content }}
+                <div class="meta">
+                  {{ msg.timestamp or '' }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty">Start the conversation.</div>
+        {% endif %}
       </div>
 
-      <div class="message received">
-        <div class="bubble">What do you know about our company?</div>
-      </div>
-
-    </div>
-
-    <div class="chat-input">
-      <input type="text" placeholder="Type a message...">
-      <button>Send</button>
-    </div>
-
+      <form class="chat-input" action="{{ url_for('owner_messages', seeker_id=selected_seeker.id) }}" method="post">
+        <input type="text" name="message" placeholder="Type a message..." required>
+        <button type="submit">Send</button>
+      </form>
+    {% else %}
+      <div class="chat-header">Select a conversation</div>
+      <div class="empty" style="padding: 20px;">Choose a contact from the left to view messages.</div>
+    {% endif %}
   </div>
 
 </body>
