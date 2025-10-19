@@ -1,0 +1,2 @@
+-- Alembic-free lightweight migration: add chat_enabled to Interest
+-- For SQLite, manual ALTER TABLE is limited; instruct to recreate if needed.
