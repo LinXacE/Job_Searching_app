@@ -15,8 +15,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 db = SQLAlchemy(app)
 socketio = SocketIO(app, async_mode="eventlet")
 
-EMAIL_REGEX = r".+@.+\..+"
-PHONE_REGEX = r"^[0-9]{10,15}$"
+# Improved regex patterns
+EMAIL_REGEX = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+PHONE_REGEX = r'^[+]?[0-9]{10,15}$'
 
 
 # --- Models ---
@@ -94,6 +95,31 @@ def is_primary_admin():
     return False
 
 
+# IMPROVED: Better CV completion validation
+def is_cv_complete(user):
+    """
+    Improved CV completion validation that checks for both None and empty strings
+    """
+    required_fields = [
+        user.full_name,
+        user.age, 
+        user.contact_email,
+        user.contact_phone,
+        user.experience
+    ]
+    
+    # Check each field is not None and not empty after stripping
+    for field in required_fields:
+        if not field or (isinstance(field, str) and not field.strip()):
+            return False
+    
+    # Additional validation for age (should be positive number)
+    if user.age and (user.age <= 0 or user.age > 120):
+        return False
+        
+    return True
+
+
 # --- Static/General Routes ---
 @app.route("/")
 def home_redirect():
@@ -134,24 +160,29 @@ def login_method_select():
     return render_template("login_method_select.html")
 
 
+# IMPROVED: Better input validation in login
 @app.route("/login/<method>", methods=["GET", "POST"])
 def loginmethod(method):
     if request.method == "POST":
         value = request.form.get("value")
         password = request.form.get("password")
-        user = User.query.filter_by(value=value, method=method).first()
+        
+        # Add input validation
+        if not value or not value.strip():
+            flash("Email/Phone is required.")
+            return redirect(request.url)
+        if not password or not password.strip():
+            flash("Password is required.")
+            return redirect(request.url)
+            
+        user = User.query.filter_by(value=value.strip(), method=method).first()
         if user and check_password_hash(user.password, password):
             session["userid"] = user.id
             if user.role == "businessowner":
                 return redirect(url_for("ownerhome"))
             elif user.role == "jobseeker":
-                if (
-                    not user.full_name
-                    or not user.age
-                    or not user.contact_email
-                    or not user.contact_phone
-                    or not user.experience
-                ):
+                # IMPROVED: Use the new validation helper
+                if not is_cv_complete(user):
                     flash("Please complete your CV before continuing!")
                     return redirect(url_for("seekerprofile"))
                 return redirect(url_for("seekerdashboard"))
@@ -174,41 +205,66 @@ def methodselect(role):
     return render_template("method_select.html", role=role)
 
 
+# IMPROVED: Better registration validation
 @app.route("/register/<role>/<method>", methods=["GET", "POST"])
 def register(role, method):
     if request.method == "POST":
-        username = request.form.get("username")
-        value = request.form.get("value")
-        password = request.form.get("password")
+        username = request.form.get("username", "").strip()
+        value = request.form.get("value", "").strip() 
+        password = request.form.get("password", "").strip()
 
+        # Improved input validation
+        if not username:
+            flash("Username is required")
+            return redirect(request.url)
+        if len(username) < 3:
+            flash("Username must be at least 3 characters")
+            return redirect(request.url)
+        if not value:
+            flash("Email/Phone is required")
+            return redirect(request.url)
+        if not password:
+            flash("Password is required")
+            return redirect(request.url)
+        if len(password) < 6:
+            flash("Password must be at least 6 characters")
+            return redirect(request.url)
+
+        # Improved email/phone validation
         if method == "email":
             if not re.match(EMAIL_REGEX, value):
-                flash("Invalid email address")
+                flash("Please enter a valid email address")
                 return redirect(request.url)
-        else:
+        else:  # phone
             if not re.match(PHONE_REGEX, value):
-                flash("Invalid phone number")
+                flash("Please enter a valid phone number (10-15 digits)")
                 return redirect(request.url)
 
+        # Check for existing users
         if User.query.filter_by(username=username).first():
             flash("Username already exists!")
             return redirect(request.url)
         if User.query.filter_by(value=value).first():
-            flash("Email/Phone already used!")
+            flash("Email/Phone already registered!")
             return redirect(request.url)
 
-        hashed_pw = generate_password_hash(password)
-        new_user = User(
-            username=username,
-            role=role,
-            method=method,
-            value=value,
-            password=hashed_pw,
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        flash("Registration successful. Please log in.")
-        return redirect(url_for("login_method_select"))
+        try:
+            hashed_pw = generate_password_hash(password)
+            new_user = User(
+                username=username,
+                role=role,
+                method=method,
+                value=value,
+                password=hashed_pw,
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Registration successful. Please log in.")
+            return redirect(url_for("login_method_select"))
+        except Exception as e:
+            db.session.rollback()
+            flash("Registration failed. Please try again.")
+            return redirect(request.url)
 
     tmpl = "register_email.html" if method == "email" else "register_phone.html"
     return render_template(tmpl, role=role)
@@ -248,7 +304,7 @@ def ownerhome():
     return render_template(
         "owner_home.html",
         jobs=jobs,
-        applicants=applicants,  # <------ THIS MAKES THE TEMPLATE WORK
+        applicants=applicants,
         total_jobs=total_jobs,
         total_applicants=total_applicants,
         total_interviews=total_interviews,
@@ -327,7 +383,6 @@ def ownerpostjob():
         return redirect(url_for("ownerhome"))
     return render_template("owner_post_job.html")
 
-# NEW: Add missing shortlist_seeker route
 @app.route("/owner/shortlist_seeker/<int:job_id>/<int:seeker_id>", methods=["POST"])
 def shortlist_seeker(job_id, seeker_id):
     if not is_logged_in():
@@ -373,7 +428,7 @@ def owner_chatroom(job_id):
     seeker_id = request.args.get("seeker_id")
     selected_seeker = User.query.get(int(seeker_id)) if seeker_id else None
     
-    # Create consistent room ID format - FIXED
+    # Create consistent room ID format
     room = f"chat_{job_id}_{seeker_id}" if seeker_id else None
 
     # Enable/disable (use POST and hidden input "chat_action")
@@ -383,16 +438,20 @@ def owner_chatroom(job_id):
 
     # Send chat message (if applicant selected)
     if request.method == "POST" and "text" in request.form and seeker_id:
-        msg = Message(
-            owner_id=owner.id,
-            seeker_id=selected_seeker.id,
-            sender_id=owner.id,
-            content=request.form["text"],
-            timestamp=datetime.now().isoformat()  # FIXED: proper timestamp
-        )
-        db.session.add(msg)
-        db.session.commit()
-        flash("Message sent.")
+        try:
+            msg = Message(
+                owner_id=owner.id,
+                seeker_id=selected_seeker.id,
+                sender_id=owner.id,
+                content=request.form["text"],
+                timestamp=datetime.now().isoformat()
+            )
+            db.session.add(msg)
+            db.session.commit()
+            flash("Message sent.")
+        except Exception as e:
+            db.session.rollback()
+            flash("Failed to send message.")
         return redirect(url_for("owner_chatroom", job_id=job_id, seeker_id=seeker_id))
 
     # Load messages for the chat box if a seeker/applicant is selected
@@ -409,11 +468,12 @@ def owner_chatroom(job_id):
         applicants=applicants,
         selected_seeker=selected_seeker,
         messages=messages,
-        room=room,  # FIXED: now it's a string, not a dict
+        room=room,
         user=owner,
     )
 
 
+# IMPROVED: Better message validation and error handling
 @app.route("/owner/messages", methods=["GET", "POST"])
 def owner_messages():
     if not is_logged_in():
@@ -441,23 +501,45 @@ def owner_messages():
     chat_history = []
     seeker_id = request.args.get("seeker_id")
     if seeker_id:
-        selected_seeker = User.query.get(seeker_id)
-        chat_history = (
-            Message.query.filter_by(owner_id=owner.id, seeker_id=seeker_id)
-            .order_by(Message.timestamp)
-            .all()
-        )
-        if request.method == "POST":
-            msg = Message(
-                content=request.form["message"],
-                owner_id=owner.id,
-                seeker_id=seeker_id,
-                sender_id=owner.id,
-                timestamp=datetime.now().isoformat()  # FIXED: proper timestamp
-            )
-            db.session.add(msg)
-            db.session.commit()
-            return redirect(url_for("owner_messages", seeker_id=seeker_id))
+        try:
+            selected_seeker = User.query.get(int(seeker_id))
+            if selected_seeker:
+                chat_history = (
+                    Message.query.filter_by(owner_id=owner.id, seeker_id=seeker_id)
+                    .order_by(Message.timestamp)
+                    .all()
+                )
+                if request.method == "POST":
+                    message_content = request.form.get("message", "").strip()
+                    
+                    # IMPROVED: Message validation
+                    if not message_content:
+                        flash("Message cannot be empty.")
+                        return redirect(url_for("owner_messages", seeker_id=seeker_id))
+                    
+                    if len(message_content) > 1000:  # Limit message length
+                        flash("Message is too long (max 1000 characters).")
+                        return redirect(url_for("owner_messages", seeker_id=seeker_id))
+                    
+                    try:
+                        msg = Message(
+                            content=message_content,
+                            owner_id=owner.id,
+                            seeker_id=seeker_id,
+                            sender_id=owner.id,
+                            timestamp=datetime.now().isoformat()
+                        )
+                        db.session.add(msg)
+                        db.session.commit()
+                        flash("Message sent successfully.")
+                    except Exception as e:
+                        db.session.rollback()
+                        flash("Failed to send message. Please try again.")
+                    
+                    return redirect(url_for("owner_messages", seeker_id=seeker_id))
+        except (ValueError, TypeError):
+            flash("Invalid seeker ID.")
+            return redirect(url_for("owner_messages"))
 
     return render_template(
         "owner_messages.html",
@@ -493,7 +575,6 @@ def seekerdashboard():
     return render_template("seeker_dashboard.html", jobs=jobs, user=user)
 
 
-# FIXED: Update seekerjobs to provide owner names
 @app.route("/seeker/jobs")
 def seekerjobs():
     if not is_logged_in():
@@ -532,32 +613,87 @@ def seekerapplications():
     applications = Interest.query.filter_by(jobseekerid=user.id).all()
     return render_template("seeker_applications.html", applications=applications, user=user)
 
-from flask import request
-
+# IMPROVED: Clearer interest action logic
 @app.route("/interest/<int:jobpostid>/<action>", methods=["POST"])
 def interest_action(jobpostid, action):
+    """
+    Handle job seeker actions on applications
+    - confirm: Confirm interest in the job (for seeker use)
+    - withdraw: Withdraw/remove application
+    """
     if not is_logged_in():
         return redirect(url_for("entry"))
+        
     user = db.session.get(User, session["userid"])
+    if not user or user.role != "jobseeker":
+        flash("Access denied.")
+        return redirect(url_for("entry"))
+    
     # Find the application entry
     app = Interest.query.filter_by(jobseekerid=user.id, jobpostid=jobpostid).first()
-    if app:
-        if action == "interest":
-            app.approved = True  # or update some value/status
-        elif action == "skip":
-            db.session.delete(app)  # or set a status = "skipped"
+    
+    if not app:
+        flash("Application not found.")
+        return redirect(url_for("seekerapplications"))
+    
+    try:
+        if action == "confirm":
+            # Seeker confirms they're still interested (optional feature)
+            app.timestamp = datetime.now().isoformat()  # Update timestamp
+            flash("Interest confirmed!")
+        elif action == "withdraw":
+            # Withdraw application
+            db.session.delete(app)
+            flash("Application withdrawn.")
+        else:
+            flash("Invalid action.")
+            return redirect(url_for("seekerapplications"))
+            
         db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        flash("An error occurred. Please try again.")
+        
     return redirect(url_for("seekerapplications"))
 
+# IMPROVED: Duplicate prevention for job applications
 @app.route("/seeker/interest/<int:job_id>", methods=["POST"])
 def seeker_interest(job_id):
+    if not is_logged_in():
+        return redirect(url_for("entry"))
+        
     user = db.session.get(User, session["userid"])
-    if user:
-        existing = Interest.query.filter_by(jobseekerid=user.id, jobpostid=job_id).first()
-        if not existing:
-            interest = Interest(jobseekerid=user.id, jobpostid=job_id, timestamp=datetime.now().isoformat())
-            db.session.add(interest)
-            db.session.commit()
+    if not user or user.role != "jobseeker":
+        flash("Access denied.")
+        return redirect(url_for("entry"))
+    
+    # Check if job exists
+    job = JobPost.query.get(job_id)
+    if not job:
+        flash("Job not found.")
+        return redirect(url_for("seekerjobs"))
+    
+    # IMPROVED: Check for existing application
+    existing = Interest.query.filter_by(jobseekerid=user.id, jobpostid=job_id).first()
+    if existing:
+        flash("You have already applied to this job!")
+        return redirect(url_for("seekerjobs"))
+    
+    try:
+        # Create new interest/application
+        interest = Interest(
+            jobseekerid=user.id, 
+            jobpostid=job_id, 
+            timestamp=datetime.now().isoformat(),
+            approved=False  # Initially not approved/shortlisted
+        )
+        db.session.add(interest)
+        db.session.commit()
+        flash(f"Successfully applied to {job.position}!")
+    except Exception as e:
+        db.session.rollback()
+        flash("Failed to apply. Please try again.")
+    
     return redirect(url_for("seekerjobs"))
 
 @app.route("/seeker/skip/<int:job_id>", methods=["POST"])
@@ -590,6 +726,7 @@ def seekerprofile():
     return render_template("seeker_profile.html", user=user)
 
 
+# CRITICAL FIX: No more experience data overwrite
 @app.route("/seeker/setlocation", methods=["GET", "POST"])
 def seekersetlocation():
     if not is_logged_in():
@@ -597,17 +734,30 @@ def seekersetlocation():
 
     user = db.session.get(User, session["userid"])
     if request.method == "POST":
+        # Update location
         user.location = request.form.get("location")
-        user.experience = request.form.get("cv")
+        
+        # FIXED: Don't overwrite experience, only update if provided and not empty
+        cv_update = request.form.get("cv")
+        if cv_update and cv_update.strip():
+            # Only update if experience is empty/None, or append to existing
+            if not user.experience or not user.experience.strip():
+                user.experience = cv_update.strip()
+            else:
+                # Optionally append new CV info (or keep existing)
+                # user.experience += "\n\n" + cv_update.strip()  # Uncomment to append
+                pass  # Keep existing experience intact
+        
         db.session.commit()
         flash("Location updated.")
-        # After db.session.commit()
-        if not (user.full_name and user.age and user.contact_email and user.contact_phone and user.experience):
+        
+        # IMPROVED: Better CV completion validation
+        if not is_cv_complete(user):
             flash("Please complete your CV before accessing the dashboard!")
             return redirect(url_for("seekerprofile"))
         return redirect(url_for("seekerdashboard"))
 
-    # IMPORTANT: Always return a response in GET!
+    # Always return a response for GET requests
     return render_template("seeker_set_location.html", user=user)
 
 @app.route("/seeker/history")
@@ -654,14 +804,51 @@ def adminusers():
     return render_template("admin_users.html", users=users, admin=admin)
 
 
+# IMPROVED: Better user deletion with cleanup
 @app.route('/admin/delete_user/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
     if not is_admin():
         return redirect(url_for('adminlogin'))
+        
     user = User.query.get_or_404(user_id)
-    db.session.delete(user)
-    db.session.commit()
-    flash('User deleted!')
+    
+    # Prevent deleting primary admin
+    if user.isprimaryadmin:
+        flash("Cannot delete the primary admin.")
+        return redirect(url_for('adminusers'))
+    
+    # Prevent self-deletion
+    if user.id == session.get('userid'):
+        flash("You cannot delete yourself.")
+        return redirect(url_for('adminusers'))
+    
+    try:
+        # IMPROVED: Clean up related records before deletion
+        # Delete user's job posts
+        JobPost.query.filter_by(ownerid=user.id).delete()
+        
+        # Delete user's interests/applications
+        Interest.query.filter_by(jobseekerid=user.id).delete()
+        
+        # Delete user's messages
+        Message.query.filter(
+            (Message.owner_id == user.id) | 
+            (Message.seeker_id == user.id) | 
+            (Message.sender_id == user.id)
+        ).delete()
+        
+        # Delete user's job history
+        JobHistory.query.filter_by(jobseekerid=user.id).delete()
+        
+        # Finally delete the user
+        db.session.delete(user)
+        db.session.commit()
+        
+        flash(f'User "{user.username}" and all related data deleted successfully!')
+    except Exception as e:
+        db.session.rollback()
+        flash('Error deleting user. Please try again.')
+        
     return redirect(url_for('adminusers'))
 
 
